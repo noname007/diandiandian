@@ -14,6 +14,7 @@ use Yii;
  * @property integer $updated_at
  * @property string $address
  * @property integer $status
+ * @property integer $user_id
  */
 class Restaurant extends \yii\db\ActiveRecord
 {
@@ -31,9 +32,9 @@ class Restaurant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'create_at', 'updated_at', 'address'], 'required'],
+            [['name', 'create_at', 'updated_at', 'address', 'user_id'], 'required'],
             [['desc', 'address'], 'string'],
-            [['create_at', 'updated_at', 'status'], 'integer'],
+            [['create_at', 'updated_at', 'status', 'user_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
         ];
@@ -52,6 +53,7 @@ class Restaurant extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'address' => 'Address',
             'status' => 'Status',
+            'user_id' => 'User ID',
         ];
     }
 }

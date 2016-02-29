@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\CompanyS\models\RestaurantMenuSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Restaurant Menus';
+$this->title = '菜品中心';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="restaurant-menu-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Restaurant Menu', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('增加菜品', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,14 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'name',
             'create_at',
-            'updated_at',
-            'restaurant_id',
-            // 'money',
-            // 'desc:ntext',
-            // 'status',
+            'money',
+            'desc:ntext',
+            'status',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

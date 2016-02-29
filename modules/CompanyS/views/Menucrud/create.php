@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\CompanyS\models\RestaurantMenu */
 
-$this->title = 'Create Restaurant Menu';
-$this->params['breadcrumbs'][] = ['label' => 'Restaurant Menus', 'url' => ['index']];
+$this->title = '添加新菜品';
+$this->params['breadcrumbs'][] = ['label' => '菜品中心', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="restaurant-menu-create">

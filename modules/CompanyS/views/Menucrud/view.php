@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\modules\CompanyS\models\RestaurantMenu */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Restaurant Menus', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '菜品中心', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="restaurant-menu-view">

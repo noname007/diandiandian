@@ -8,6 +8,7 @@ use app\modules\CompanyS\models\RestaurantMenuSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use dektrium\user\models\User;
 
 /**
  * MenucrudController implements the CRUD actions for RestaurantMenu model.
@@ -37,7 +38,7 @@ class MenucrudController extends Controller
     {
         $searchModel = new RestaurantMenuSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+// 		User();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -64,8 +65,17 @@ class MenucrudController extends Controller
     public function actionCreate()
     {
         $model = new RestaurantMenu();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        var_dump($_POST);
+        exit;
+        $model->load(Yii::$app->request->post());
+        
+        
+        //['name', 'create_at', 'updated_at', 'restaurant_id', 'money']
+        $time = time();
+        $model->create_at  = $time;
+        $model->updated_at = $time;
+		        
+        if ( $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [

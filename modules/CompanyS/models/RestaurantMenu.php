@@ -46,13 +46,13 @@ class RestaurantMenu extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'create_at' => 'Create At',
-            'updated_at' => 'Updated At',
-            'restaurant_id' => 'Restaurant ID',
-            'money' => 'Money',
-            'desc' => 'Desc',
-            'status' => 'Status',
+            'name' => '菜名',
+            'create_at' => '创建时间',
+            'updated_at' => '最后更新时间',
+            'restaurant_id' => '餐馆ID',
+            'money' => '菜单价（分为单位）',
+            'desc' => '菜品描述',
+            'status' => '状态',
         ];
     }
 }
