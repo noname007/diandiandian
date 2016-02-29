@@ -72,7 +72,17 @@ $config = [
 // 				'enableGeneratingPassword'=>true,
 				'confirmWithin' => 21600,
 				'cost' => 12,
-				'admins' => ['admin']
+				'admins' => ['soul11201']
+		],
+			
+// 			B2B
+		'cs' => [
+// 				卖家
+			'class' => 'app\modules\CompanyS\CompanyS',
+		],		
+		'ca' => [
+// 				买家
+			'class' => 'app\modules\CompanyA\CompanyA',
 		],
 	],
     'params' => $params,
