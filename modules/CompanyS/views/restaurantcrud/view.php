@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\CompanyS\models\RestaurantMenu */
+/* @var $model app\modules\CompanyS\models\Restaurant */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => '菜品中心', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Restaurants', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="restaurant-menu-view">
+<div class="restaurant-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -25,16 +25,21 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'name',
+            'desc:ntext',
             'create_at',
             'updated_at',
-            'money',
-            'desc:ntext',
+            'address:ntext',
             'status',
+        	[
+        		'attribute'=>'user_id',
+        		'value'=>Yii::$app->user->identity->username,
+        	],
         ],
     ]) ?>
 

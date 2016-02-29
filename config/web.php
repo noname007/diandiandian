@@ -16,10 +16,11 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-//         'user' => [
-//             'identityClass' => 'app\models\User',
-//             'enableAutoLogin' => true,
-//         ],
+        'user' => [
+            'class' => 'app\components\User',
+        	'identityClass' => 'dektrium\user\models\User',
+            'enableAutoLogin' => true,
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -36,7 +37,7 @@ $config = [
         		'class' => 'Swift_SmtpTransport',
         		'host' => 'smtp.exmail.qq.com',
         		'username' => 'yangzz@sevenga.com',
-        		'password' => '111111',
+        		'password' => 'y@ng123a',
         		'port' => '465',
         		'encryption' => 'ssl',
         	],
@@ -47,11 +48,11 @@ $config = [
     				 
     	],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' =>3,// YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning','info','trace'],
                 ],
             ],
         ],

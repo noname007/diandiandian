@@ -3,7 +3,6 @@
 namespace app\modules\CompanyS\models;
 
 use Yii;
-
 /**
  * This is the model class for table "restaurant".
  *
@@ -16,7 +15,7 @@ use Yii;
  * @property integer $status
  * @property integer $user_id
  */
-class Restaurant extends \yii\db\ActiveRecord
+class Restaurant extends \app\models\Company
 {
     /**
      * @inheritdoc
@@ -29,16 +28,7 @@ class Restaurant extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['name', 'create_at', 'updated_at', 'address', 'user_id'], 'required'],
-            [['desc', 'address'], 'string'],
-            [['create_at', 'updated_at', 'status', 'user_id'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['name'], 'unique'],
-        ];
-    }
+    
 
     /**
      * @inheritdoc
@@ -47,13 +37,13 @@ class Restaurant extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'desc' => 'Desc',
-            'create_at' => 'Create At',
-            'updated_at' => 'Updated At',
-            'address' => 'Address',
-            'status' => 'Status',
-            'user_id' => 'User ID',
+            'name' => '餐馆名字',
+            'desc' => '餐馆描述',
+            'create_at' => '创建时间',
+            'updated_at' => '更新时间',
+            'address' => '餐馆地址',
+            'status' => '餐馆状态',
+            'user_id' => '创建者',
         ];
     }
 }

@@ -4,15 +4,14 @@
 
 use yii\helpers\Html;
 
-$this->title = 'About';
+$this->title = '关于我们';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-about">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        This is the About page. You may modify the following file to customize its content:
+        努力开发中
     </p>
 
-    <code><?= __FILE__ ?></code>
 </div>
