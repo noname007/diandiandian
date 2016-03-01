@@ -19,6 +19,10 @@ use Yii;
  */
 class Issus extends \yii\db\ActiveRecord
 {
+	
+	const NORMAL = 0;
+	public static $TYPE = [0=>'饭馆',1=>'普通企业'];
+	public static $STATUS =  [0=>'正常运行','暂时无法提供服务'];
     /**
      * @inheritdoc
      */
