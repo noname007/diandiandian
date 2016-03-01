@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Menu;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Menu */
@@ -28,15 +29,26 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'name',
-            'create_at',
-            'updated_at',
-            'restaurant_id',
-            'user_id',
+        	[
+        		'attribute'=>'create_at',
+        		'value'=>date('Y-m-d H:i:s',$model->create_at),
+        	],
+        	[
+        		'attribute'=>'updated_at',
+        		'value'=>date('Y-m-d H:i:s',$model->updated_at),
+        				 
+        	],
+        	[
+        		'attribute'=>'status',
+        		'value'=>Menu::$STATUS[$model->status],
+        	],
+        	[
+        			'attribute'=>'user_id',
+        			'value'=>Yii::$app->user->identity->username,
+        	],
             'money',
             'desc:ntext',
-            'status',
         ],
     ]) ?>
 

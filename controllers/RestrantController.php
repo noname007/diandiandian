@@ -8,6 +8,9 @@ use app\models\MenuSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\MenuForm;
+use app\models\Issus;
+use yii\helpers\VarDumper;
 
 /**
  * RestrantController implements the CRUD actions for Menu model.
@@ -63,15 +66,34 @@ class RestrantController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Menu();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
+        $model = new MenuForm();
+        
+        if (!$model->load(Yii::$app->request->post())) 
+        {
+        	goto render;
+        }
+        $time = time();
+        $model->create_at = $time;
+        $model->updated_at =$time;
+        $model->user_id = \Yii::$app->user->getId();
+        
+        $res = Issus::find()->select('id')->where(['user_id'=>$model->user_id,'type'=>0])->asArray()->one();
+        $model->restaurant_id = $res['id'];
+        
+        if(!$model->save())
+        {
+        	goto  fail_process;
+        }
+        
+        return $this->redirect(['view', 'id' => $model->id]);
+        
+        fail_process:
+        	\Yii::error(VarDumper::dumpAsString($model->getErrors()),'MENU_CRUD_C');
+        render:
+        	$model->status = $model->status? : 0;
+       		return $this->render('create', [
                 'model' => $model,
             ]);
-        }
     }
 
     /**
@@ -84,13 +106,28 @@ class RestrantController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        if (!$model->load(Yii::$app->request->post())) 	
+        {
+        	goto end;
+        }
+        
+        $oldtime = $model->updated_at;
+		$model->updated_at = time();
+			
+        if(!$model->save()) 
+        {
+        	\Yii::error(VarDumper::dumpAsString($model->getErrors()),'MENU_CRUD_U');
+        	$model->updated_at = $oldtime;
+        	goto  save_failuer;
+        }
+        
+        return $this->redirect(['view', 'id' => $model->id]);
+        
+        save_failuer:
+        end:
             return $this->render('update', [
                 'model' => $model,
             ]);
-        }
     }
 
     /**

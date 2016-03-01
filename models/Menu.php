@@ -22,6 +22,7 @@ class Menu extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+	public static  $STATUS=['在售','已售完'];
     public static function tableName()
     {
         return 'menu';
@@ -47,14 +48,14 @@ class Menu extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'create_at' => 'Create At',
-            'updated_at' => 'Updated At',
-            'restaurant_id' => 'Restaurant ID',
-            'user_id' => 'User ID',
-            'money' => 'Money',
-            'desc' => 'Desc',
-            'status' => 'Status',
+            'name' => '菜名',
+            'create_at' => '创建时间',
+            'updated_at' => '更新时间',
+            'restaurant_id' => '餐馆',
+            'user_id' => '创建者',
+            'money' => '菜价(RMB单位:分)',
+            'desc' => '详细描述此菜',
+            'status' => '是否在售',
         ];
     }
 }
