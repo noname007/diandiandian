@@ -69,4 +69,10 @@ class IssusController extends WebController
 		return $this->render('form',['model'=>$model_form]);
 	}
 	
+	
+	function  actionDisplay()
+	{
+		return 'display meme/memu';
+	}
+	
 }
