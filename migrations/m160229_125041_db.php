@@ -18,10 +18,10 @@ class m160229_125041_db extends Migration
     			'status'=>Schema::TYPE_INTEGER . ' NOT NULL default 0',
      			'type'=>Schema::TYPE_INTEGER,
      			'user_id'=>Schema::TYPE_INTEGER,
-     			'primary key id,type,user_id',
+     			'primary key (id,type,user_id)',
     	]);
     	
-    	$this->createIndex('rst_name', '{{%issus}}', 'name',true);
+    	$this->createIndex('issus_name', '{{%issus}}', 'name',true);
     	
     	$this->createTable('{{%menu}}', [
     			'id'=>Schema::TYPE_PK,
@@ -29,12 +29,13 @@ class m160229_125041_db extends Migration
     			'create_at'=>Schema::TYPE_INTEGER . ' NOT NULL',
     			'updated_at'=> Schema::TYPE_INTEGER . ' NOT NULL',
     			'restaurant_id'=>Schema::TYPE_INTEGER.' not null',
+    			'user_id'=>Schema::TYPE_INTEGER,
     			'money' => Schema::TYPE_INTEGER. ' not null',//分为单位
     			'desc'=>Schema::TYPE_TEXT,
     			'status'=>Schema::TYPE_INTEGER . ' NOT NULL default 0',
     	]);
     	
-    	$this->createIndex('rst_menu_name', '{{%menu}}', 'name,restaurant_id');
+    	$this->createIndex('menu_name', '{{%menu}}', 'name,restaurant_id,user_id');
   
     	$this->createTable('{{%order}}',[
     			'id'   	  => Schema::TYPE_PK,
@@ -55,7 +56,7 @@ class m160229_125041_db extends Migration
     	$this->createTable('{{%issus_member}}', [
     			'issus_id'=>Schema::TYPE_INTEGER,
     			'user_id'=>Schema::TYPE_INTEGER,
-    			'primary key issus_id,user_id',
+    			'primary key (issus_id,user_id)',
     	]);
     }
 
