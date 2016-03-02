@@ -41,7 +41,7 @@ class RestrantController extends Controller
         $searchModel = new MenuSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('menucrud/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -54,7 +54,7 @@ class RestrantController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->render('menucrud/view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -91,7 +91,7 @@ class RestrantController extends Controller
         	\Yii::error(VarDumper::dumpAsString($model->getErrors()),'MENU_CRUD_C');
         render:
         	$model->status = $model->status? : 0;
-       		return $this->render('create', [
+       		return $this->render('menucrud/create', [
                 'model' => $model,
             ]);
     }
@@ -125,7 +125,7 @@ class RestrantController extends Controller
         
         save_failuer:
         end:
-            return $this->render('update', [
+            return $this->render('menucrud/update', [
                 'model' => $model,
             ]);
     }
@@ -140,7 +140,7 @@ class RestrantController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['menucrud/index']);
     }
 
     /**
