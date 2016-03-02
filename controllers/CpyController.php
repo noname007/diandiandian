@@ -7,31 +7,40 @@ use app\models\Issus;
 use app\models\CpyRest;
 use yii\helpers\VarDumper;
 use Yii;
+use yii\helpers\Html;
 
 class CpyController extends \yii\web\Controller
 {
     
-    public $defaultAction = 'view';
+    public $defaultAction = 'find_rest';
     
-    function actionFind_rest($incondtion='not')
+    function actionFind_rest()
     {
         $search = new IssusSearch();
         $dataProvider = $search->search(\Yii::$app->request->queryParams);
         
+        $rest_id = implode($this->getSupplyRestIds(),',');
         
-        $cpy = Issus::find()->select('id')->where(['type'=>Issus::TYPE_CPY,'user_id'=>\Yii::$app->user->getId()])->asArray()->one();
-        $cpys = CpyRest::find()->select('rest_id')->where(['cpy_id'=>$cpy['id']])->asArray()->all();
+        $query = $dataProvider->query->andWhere(['type'=>Issus::TYPE_RESTRANT,'status'=>Issus::NORMAL]);
+        if($rest_id){
+            $query->andWhere('id not in('.$rest_id.')');
+        }
         
-        $cond_in = implode(array_column($cpys, 'rest_id'), ',');
-        
-        $dataProvider->query->andWhere(['type'=>Issus::TYPE_RESTRANT,'status'=>Issus::NORMAL])->andWhere("id $incondtion in($cond_in)");
-       
         return  $this->render('display',[
             'searchModel' => $search,
             'dataProvider' => $dataProvider,
-            'isFindRest' =>$incondtion?true:false,
+            'isFindRest' =>true,
         ]);
     }
+    
+    
+    protected  function getSupplyRestIds(){
+        $cpy = Issus::find()->select('id')->where(['type'=>Issus::TYPE_CPY,'user_id'=>\Yii::$app->user->getId()])->asArray()->one();
+        $cpys = CpyRest::find()->select('rest_id')->where(['cpy_id'=>$cpy['id']])->asArray()->all();
+//         $cond_in = implode(, ',');
+        return array_column($cpys, 'rest_id');
+    }
+    
     
     function actionAdd()
     {
@@ -68,7 +77,24 @@ class CpyController extends \yii\web\Controller
     }
     
     function actionView() {
-        return $this->actionFind_rest('');
+        $search = new IssusSearch();
+        $dataProvider = $search->search(\Yii::$app->request->queryParams);
+        
+        $rest_id = implode($this->getSupplyRestIds(),',');
+        
+        $query = $dataProvider->query->andWhere(['type'=>Issus::TYPE_RESTRANT,'status'=>Issus::NORMAL]);
+        if($rest_id){
+            $query->andWhere('id  in('.$rest_id.')');
+        }else{
+            echo Html::a('去添加','/cpy/find_rest');
+            \Yii::$app->end();
+        }
+        
+        return  $this->render('display',[
+            'searchModel' => $search,
+            'dataProvider' => $dataProvider,
+            'isFindRest' =>false,
+        ]);
     }
     
     
