@@ -21,8 +21,11 @@ class Issus extends \yii\db\ActiveRecord
 {
 	
 	const NORMAL = 0;
-	public static $TYPE = [0=>'饭馆',1=>'普通企业'];
 	public static $STATUS =  [0=>'正常运行','暂时无法提供服务'];
+	
+	const TYPE_RESTRANT = 0;
+	const TYPE_CPY = 1;
+	public static $TYPE = [0=>'饭馆',1=>'普通企业'];
     /**
      * @inheritdoc
      */
@@ -52,11 +55,11 @@ class Issus extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'desc' => 'Desc',
+            'name' => '名字',
+            'desc' => '具体描述',
             'create_at' => 'Create At',
             'updated_at' => 'Updated At',
-            'address' => 'Address',
+            'address' => '地址',
             'status' => 'Status',
             'type' => 'Type',
             'user_id' => 'User ID',
