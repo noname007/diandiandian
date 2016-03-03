@@ -4,23 +4,15 @@ namespace  app\controllers;
 use yii\web\Controller as WebController;
 use app\models\FillIssusInfo;
 use yii\helpers\VarDumper;
+use app\models\IssusMember;
 
 class IssusController extends WebController
 {
 	public $defaultAction = 'create'; 
-// 	public  function  beforeAction($action)
-// 	{
-// 		if (!parent::beforeAction($action)) {
-// 			return false;
-// 		}
-
-// 		return true;
-// 	}
 	
 	public function actionIndex()
 	{
 		return 'hello world';
-// 		return $this->render('index',['model'=>new Fillrestaurantinfo()]);
 	}
 	
 	
@@ -61,12 +53,24 @@ class IssusController extends WebController
 		
 		$model_form->status = FillIssusInfo::NORMAL;
 		
-		if ( $model_form->save())
+		if (!$model_form->save())
 		{
-			return $this->render('view',['model'=>$model_form]);
+		    \Yii::error(VarDumper::dumpAsString($model_form->getErrors()),'FILLINFO');
+		    return $this->render('form',['model'=>$model_form]);
 		}
-		\Yii::error(VarDumper::dumpAsString($model_form->getErrors()),'FILLINFO');
-		return $this->render('form',['model'=>$model_form]);
+		
+		$record = new IssusMember();
+		$record->user_id = $model_form->user_id;
+		$record->issus_id = $model_form->id;
+		
+		if(!$record->save())
+		{
+		    \Yii::error(VarDumper::dumpAsString($record->getErrors()),'FILLINFO');
+		    return $this->render('form',['model'=>$model_form]);
+		}
+		
+		return $this->render('view',['model'=>$model_form]);
+		
 	}
 	
 	
