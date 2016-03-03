@@ -113,4 +113,15 @@ class CpyController extends \yii\web\Controller
         echo '已删除';
         
     }
+    
+    function actionMenu()
+    {
+        $sql = 'select name,restaurant_id,money,id menu_id from  (select rest_id from cpy_rest cr,issus_member im where im.issus_id = cr.cpy_id and im.user_id = :user_id) t,menu m where m.restaurant_id = t.rest_id and status = 0';
+        $res = \Yii::$app->db->createCommand($sql,[':user_id'=>\Yii::$app->user->getId()])->queryAll();
+         
+    
+        //TODO 具体显示
+        var_dump($res);
+        // 	       select * from
+    }
 }
