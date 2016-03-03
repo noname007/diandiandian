@@ -8,11 +8,15 @@ use app\models\CpyRest;
 use yii\helpers\VarDumper;
 use Yii;
 use yii\helpers\Html;
+use app\models\OrderForm;
+use app\models\Menu;
+use app\models\Order;
+use app\models\IssusMember;
 
 class CpyController extends \yii\web\Controller
 {
     
-    public $defaultAction = 'find_rest';
+    public $defaultAction = 'menu';
     
     function actionFind_rest()
     {
@@ -116,12 +120,96 @@ class CpyController extends \yii\web\Controller
     
     function actionMenu()
     {
-        $sql = 'select name,restaurant_id,money,id menu_id from  (select rest_id from cpy_rest cr,issus_member im where im.issus_id = cr.cpy_id and im.user_id = :user_id) t,menu m where m.restaurant_id = t.rest_id and status = 0';
-        $res = \Yii::$app->db->createCommand($sql,[':user_id'=>\Yii::$app->user->getId()])->queryAll();
+        $get_menu_sql = 'select name,restaurant_id,money,id from  (select rest_id from cpy_rest cr,issus_member im where im.issus_id = cr.cpy_id and im.user_id = :user_id) t,menu m where m.restaurant_id = t.rest_id and status = 0 group by t.rest_id';
+        $menus = \Yii::$app->db->createCommand($get_menu_sql,[':user_id'=>\Yii::$app->user->getId()])->queryAll();
          
     
         //TODO 具体显示
-        var_dump($res);
-        // 	       select * from
+        
+        /*
+         * array (size=1)
+              0 => 
+                array (size=4)
+                  'name' => string '中华小吃' (length=12)
+                  'restaurant_id' => string '4' (length=1)
+                  'money' => string '120' (length=3)
+                  'id' => string '1' (length=1)
+         */
+        //         var_dump($menus);
+        // //         exit;
+        
+        
+       foreach ($menus as $key=>$v)
+       {
+            $menus[$key]['name'] .= ' '. round($menus[$key]['money'] /100,2).'元';    
+       }
+       
+       return $this->render('order',['model'=>new OrderForm(),'menus'=>$menus]);
+    }
+    
+    function actionOrder_foods()
+    {
+        $post = \Yii::$app->request->post();
+        
+        
+        $menu_id = array_filter($post['OrderForm']['menus'],function ($menu_id){
+            if(is_numeric($menu_id) && $menu_id > 0){
+                return true;
+            }else{
+                return false;
+            }
+        });
+        
+        if(empty($menu_id)){
+            echo '参数错误';
+            var_dump($post,$menu_id);
+            
+            \Yii::$app->end();
+        }
+        
+        $menu = Menu::find()->select("money,name,restaurant_id")->where('id in('.implode($menu_id,  ',').')')->asArray()->all();
+        $total_money = array_sum(array_column($menu, 'money'));
+        
+        if($total_money > 3000){
+            echo '超额：'.$total_money;   
+            \Yii::$app->end();
+        }
+        
+//         echo '预定'.implode(array_column($menu, 'name'), ',').'成功，共计'.$total_money.'元';
+        
+        
+        $issus = IssusMember::find()->select('issus_id')->where(['user_id'=>\Yii::$app->user->getId()])->one();
+        
+        $order = new Order();
+        
+        $order->user_id = \Yii::$app->end();
+        $order->cpy_id = $issus['issus_id'];
+        
+        $time = time();
+        
+        $tranc = \Yii::$app->db->beginTransaction();
+        
+        $menu_name = [];
+        try{
+            var_dump($menu);
+            foreach ($menu as $v)
+            {
+                $order->setIsNewRecord(true);
+                $order->memu_id = $v['id'];
+                $order->restaurant_id = $issus['restaurant_id'];
+                $order->create_at = $time;
+                $order->updated_at = $time;
+                $order->money = $v['money'];
+                $order->status = 0;
+                $order->save();
+                $menu_name[] =$v['name'];
+            }
+            
+            $tranc->commit();
+            echo '预定'.implode($menu_name, ',').'成功，共计'.$total_money.'元';
+        }catch (\Exception $e){
+            echo 'sever_error';
+            $tranc->rollBack()  ;
+        }
     }
 }
