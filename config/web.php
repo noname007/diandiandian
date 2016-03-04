@@ -68,11 +68,14 @@ $config = [
 	'modules' => [
 		'user' => [
 				'class' => 'dektrium\user\Module',
+    		    'controllerMap' => [
+    		        'admin' => 'app\controllers\user\AdminController'
+    		    ],
 				'enableUnconfirmedLogin' => true,
 // 				'enableGeneratingPassword'=>true,
 				'confirmWithin' => 21600,
 				'cost' => 12,
-				'admins' => ['admin']
+				'admins' => ['admin','yangzz']
 		],
 	],
     'params' => $params,

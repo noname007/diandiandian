@@ -151,6 +151,19 @@ class CpyController extends \yii\web\Controller
     {
         $post = \Yii::$app->request->post();
         
+        if(!isset($post['OrderForm']['menus'])){
+            echo '参数错误';
+            \Yii::$app->end();
+        }
+        
+        $daybegin=strtotime(date("Ymd"));
+        $dayend=$daybegin+86400;
+        $alread_book = Order::find()->where("create_at>$daybegin and create_at < $dayend")->exists();
+        
+       if($alread_book){
+           echo '已经预定过';
+           \Yii::$app->end();
+       }
         
         $menu_id = array_filter($post['OrderForm']['menus'],function ($menu_id){
             if(is_numeric($menu_id) && $menu_id > 0){
@@ -162,41 +175,33 @@ class CpyController extends \yii\web\Controller
         
         if(empty($menu_id)){
             echo '参数错误';
-            var_dump($post,$menu_id);
-            
             \Yii::$app->end();
         }
         
-        $menu = Menu::find()->select("money,name,restaurant_id")->where('id in('.implode($menu_id,  ',').')')->asArray()->all();
+        $menu = Menu::find()->select("id,money,name,restaurant_id")->where('id in('.implode($menu_id,  ',').')')->asArray()->all();
         $total_money = array_sum(array_column($menu, 'money'));
-        
+
         if($total_money > 3000){
             echo '超额：'.$total_money;   
             \Yii::$app->end();
         }
-        
-//         echo '预定'.implode(array_column($menu, 'name'), ',').'成功，共计'.$total_money.'元';
-        
-        
+
         $issus = IssusMember::find()->select('issus_id')->where(['user_id'=>\Yii::$app->user->getId()])->one();
-        
+
         $order = new Order();
-        
-        $order->user_id = \Yii::$app->end();
+
+        $order->user_id = \Yii::$app->user->getId();
         $order->cpy_id = $issus['issus_id'];
-        
+
         $time = time();
-        
         $tranc = \Yii::$app->db->beginTransaction();
-        
         $menu_name = [];
         try{
-            var_dump($menu);
             foreach ($menu as $v)
             {
                 $order->setIsNewRecord(true);
                 $order->memu_id = $v['id'];
-                $order->restaurant_id = $issus['restaurant_id'];
+                $order->restaurant_id = $v['restaurant_id'];
                 $order->create_at = $time;
                 $order->updated_at = $time;
                 $order->money = $v['money'];
@@ -204,12 +209,12 @@ class CpyController extends \yii\web\Controller
                 $order->save();
                 $menu_name[] =$v['name'];
             }
-            
             $tranc->commit();
-            echo '预定'.implode($menu_name, ',').'成功，共计'.$total_money.'元';
+            echo '预定'.implode($menu_name, ',').'成功，共计'.round($total_money/100,2).'元';
         }catch (\Exception $e){
-            echo 'sever_error';
             $tranc->rollBack()  ;
+            echo 'sever_error';
+            \Yii::error(VarDumper::dumpAsString($order->getErrors()),$e->getMessage(),'ORDER_FOODS');
         }
     }
 }
